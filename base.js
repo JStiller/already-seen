@@ -3,9 +3,10 @@ var base = base || {};
 /**
  * Already Seen
  * 
- * This function should track all articles and mark them as read
+ * This function should track all websites and mark them as seen
  * 
  * @author José Stiller
+ * @email info@josestiller.de
  * @retun void
  */
 base.alreadySeen = function(config) {
@@ -20,7 +21,8 @@ base.alreadySeen = function(config) {
                     exceptions: []
                 }
             ],
-            prefix: 'visited-'
+            prefix: 'visited-',
+            data: 'visited'
         };
     }
     
@@ -65,7 +67,7 @@ base.alreadySeen = function(config) {
         // iterate trough all links and check if that link was already visited
         for (var i = 0; i < links.length; i++) {
             if (links[i].host == window.location.host && localStorage.getItem(self.config.prefix + links[i].pathname)) {
-                links[i].dataset.visited = true;
+                links[i].dataset[self.config.data] = true;
             }
         };
     };
@@ -82,7 +84,8 @@ var config = {
             ]
         }
     ],
-    prefix: 'visited-'
+    prefix: 'visited-',
+    data: 'visited'
 };
 
 var josestiller = new base.alreadySeen(config);
