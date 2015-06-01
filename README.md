@@ -18,6 +18,7 @@ var config = {
             ]
         }
     ],
-    prefix: 'prefix-'
+    prefix: 'prefix-',
+    data: 'name'
 };
 ```
