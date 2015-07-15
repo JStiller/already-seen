@@ -11,10 +11,7 @@ var base = base || {};
  */
 base.alreadySeen = function(config) {
     var self = this;
-    self.config = config;
-    
-    if(typeof self.config === 'undefined') {
-        self.config = {
+    self.config = config || {
             rules: [
                 {
                     location: '',
@@ -24,70 +21,56 @@ base.alreadySeen = function(config) {
             prefix: 'visited-',
             data: 'visited'
         };
-    }
     
     /**
      * Track
      * 
      * Should track all visited sites that are configurated
-     * including the exceptions
+     * excluding the exceptions
      */
-    self.track = function () {
-        var clientLocation = window.location.pathname;
-        
+    self.track = function (client) {
         // iterate trough all defined rules
-        for (var i = 0; i < self.config.rules.length; i++) {
-            var trackedLocation = self.config.rules[i].location,
-                exceptions = self.config.rules[i].exceptions,
-                track = true;
+        self.config.rules.forEach(function(track) {
+            var ytrack = true;
 
             // checks if the rule matches
-            if (clientLocation.substr(0, trackedLocation.length) === trackedLocation) {
+            if (client.substr(0, track.location.length) === track.location) {
                 // iterate trough all exceptions
-                for (var n = 0; n < exceptions.length; n++) {
-                    var exceptionsLocation = exceptions[n].location;
-                    // check if the exception matches
-                    if (clientLocation.substr(0, exceptionsLocation.length) === exceptionsLocation) {
-                        track = false;
-                    }
+                if(typeof track.exceptions === "object") {
+                    track.exceptions = [track.exceptions];
                 }
                 
+                track.exceptions.forEach(function(exception) {
+                    // check if the exception matches
+                    if (client.substr(0, exception.location.length) === exception.location) {
+                        ytrack = false;
+                    }
+                });
+                
                 // store path if none of the exceptions matched
-                if (track === true) {
+                if (ytrack === true) {
                     localStorage.setItem(self.config.prefix + window.location.pathname, true);
                 }
             }
-        }
+        });
     };
     
-    self.check = function () {
-        // grab all links
-        var links = document.getElementsByTagName('a');
+    self.check = function (links) {
+        if(!Array.isArray(links)) {
+            links = Object.keys(links).map(function (key) {return links[key]});
+        }
         
-        // iterate trough all links and check if that link was already visited
-        for (var i = 0; i < links.length; i++) {
-            if (links[i].host == window.location.host && localStorage.getItem(self.config.prefix + links[i].pathname)) {
-                links[i].dataset[self.config.data] = true;
-            }
-        };
+        // iterate trough all links and check if it was already visited
+        // for (var i = 0; i < links.length; i++) {
+        //     if (links[i].host == window.location.host && localStorage.getItem(self.config.prefix + links[i].pathname)) {
+        //         links[i].dataset.visited = true;
+        //     }
+        // };
+        
+        links.forEach(function(link) {
+            if (link.host == window.location.host && localStorage.getItem(self.config.prefix + link.pathname)) {
+                link.dataset[self.config.data] = true;
+            } 
+        });
     };
 };
-
-var config = {
-    rules: [
-        {
-            location: '/journal/',
-            exceptions: [
-                {
-                    location: '/journal/archiv'
-                }
-            ]
-        }
-    ],
-    prefix: 'visited-',
-    data: 'visited'
-};
-
-var josestiller = new base.alreadySeen(config);
-josestiller.track();
-josestiller.check();
