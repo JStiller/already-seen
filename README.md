@@ -6,7 +6,7 @@ It stores the information by localStorage.
 Actually you are able to configurate the sites that should be tracked.
 Further more you can configurate exceptions by the following object:
 
-```
+```javascript
 var config = {
     rules: [
         {
@@ -29,7 +29,7 @@ be tracked.
 
 The following example tracks everything on a webpage and is set by
 default.
-```
+```javascript
 var config = {
     rules: [
         {
@@ -39,7 +39,7 @@ var config = {
 ```
 
 If you only want to track everything within a specific path
-```
+```javascript
 var config = {
     rules: [
         {
@@ -50,7 +50,7 @@ var config = {
 
 If you want to track everything within a specific path
 without one or more subdirectories, you can define exceptions.
-```
+```javascript
 var config = {
     rules: [
         {
@@ -76,28 +76,8 @@ var config = {
     ];
 ```
 
-var config = {
-    rules: [
-        {
-            location: '/journal/',
-            exceptions: [
-                {
-                    location: '/journal/archiv'
-                }
-            ]
-        }
-    ],
-    prefix: 'visited-',
-    data: 'visited'
-};
-
-var josestiller = new base.alreadySeen(config);
-josestiller.track();
-josestiller.check();
-
-
 ## How to style
-```
+```css
 a[data-*] {
     :after {
     content: 'seen'
@@ -105,7 +85,7 @@ a[data-*] {
 }
 ```
 OR
-```
+```css
 a[data-name] {
     :after {
     content: 'seen'
@@ -113,7 +93,7 @@ a[data-name] {
 }
 ```
 OR
-```
+```css
 a[data-name="true"] {
     :after {
     content: 'seen'
