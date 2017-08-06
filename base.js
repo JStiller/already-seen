@@ -1,51 +1,87 @@
-var base = base || {};
+var jstiller = jstiller || {};
+jstiller.modules = jstiller.modules || {};
 
-base.alreadySeen = function (config) {
-    'use strict'
-
-    var self = this;
-    self.config = config || {
-        rules: [
-            {
-                location: '',
-                exceptions: []
-            }
-        ],
-        prefix: 'visited-',
-        data: 'visited'
+jstiller.modules.alreadySeen = (function (dependency) {
+  var estimatedSettings,
+    defaultSettings = {
+      rules: [
+        {
+          location: '',
+          exceptions: []
+        }
+      ],
+      prefix: 'visited-',
+      data: 'visited'
     };
 
-    self.track = function (client) {
-        self.config.rules.forEach(function (track) {
-            var permission = true;
+  /**
+   * sets custom settings
+   * 
+   * @param {object} deliveredSettings
+   * @return {object}
+   */
+  function settings(deliveredSettings) {
+    estimatedSettings = dependency.window.Object.assign(defaultSettings, deliveredSettings);
 
-            if (client.substr(0, track.location.length) === track.location) {
-                if (typeof track.exceptions === 'object' && !Array.isArray(track.exceptions)) {
-                    track.exceptions = [track.exceptions];
-                }
+    return this;
+  }
 
-                track.exceptions.forEach(function (exception) {
-                    if (client.substr(0, exception.location.length) === exception.location) {
-                        permission = false;
-                    }
-                });
+  /**
+   * tracks the delivered url
+   * 
+   * @param {string} deliveredClient URL
+   * @return {object}
+   */
+  function track(deliveredClient) {
+    estimatedSettings.rules.forEach(function (receivedTrack) {
+      var permission = true;
 
-                if (permission === true) {
-                    localStorage.setItem(self.config.prefix + window.location.pathname, 'true');
-                }
-            }
-        });
-    };
-
-    self.check = function (links) {
-        if (typeof links === 'object' && !Array.isArray(links)) {
-            links = Object.keys(links).map(function (key) { return links[key] });
+      if (deliveredClient.substr(0, receivedTrack.location.length) === receivedTrack.location) {
+        if (typeof receivedTrack.exceptions === 'object' && !dependency.window.Array.isArray(receivedTrack.exceptions)) {
+          receivedTrack.exceptions = [receivedTrack.exceptions];
         }
 
-        links.forEach(function (link) {
-            if (link.host == window.location.host && localStorage.getItem(self.config.prefix + link.pathname)) {
-                link.dataset[self.config.data] = true;
-            }
+        receivedTrack.exceptions.forEach(function (exception) {
+          if (deliveredClient.substr(0, exception.location.length) === exception.location) {
+            permission = false;
+          }
         });
-    };
-};
+
+        if (permission === true) {
+          dependency.window.localStorage.setItem(estimatedSettings.prefix + dependency.window.location.pathname, 'true');
+        }
+      }
+    });
+
+    return this;
+  };
+
+  /**
+   * 
+   * @param {string} deliveredLinks
+   * @return {object}
+   */
+  function check(deliveredLinks) {
+    if (typeof deliveredLinks === 'object' && !dependency.window.Array.isArray(deliveredLinks)) {
+      deliveredLinks = dependency.window.Object.keys(deliveredLinks).map(function (key) {
+        return deliveredLinks[key]
+      });
+    }
+
+    deliveredLinks.forEach(function (link) {
+      if (link.host == dependency.window.location.host && dependency.window.localStorage.getItem(estimatedSettings.prefix + link.pathname)) {
+        link.dataset[estimatedSettings.data] = true;
+      }
+    });
+
+    return this;
+  };
+  
+  return {
+    settings: settings,
+    track: track,
+    check: check,
+  };
+}({
+  window: window,
+}));
