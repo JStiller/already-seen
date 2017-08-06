@@ -1,0 +1,23 @@
+{
+  "name": "@jstiller/already-seen",
+  "version": "0.0.1",
+  "description": "A simple url tracker",
+  "main": "base.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JStiller/already-seen.git"
+  },
+  "keywords": [
+    "tracker",
+    "url"
+  ],
+  "author": "José Stiller <info@josestiller.de> (http://www.josestiller.de)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JStiller/already-seen/issues"
+  },
+  "homepage": "https://github.com/JStiller/already-seen#readme"
+}
