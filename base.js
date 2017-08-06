@@ -34,20 +34,20 @@ jstiller.modules.alreadySeen = (function (dependency) {
    */
   function track(deliveredClient) {
     estimatedSettings.rules.forEach(function (receivedTrack) {
-      var permission = true;
+      var estimatedPermission = true;
 
       if (deliveredClient.substr(0, receivedTrack.location.length) === receivedTrack.location) {
         if (typeof receivedTrack.exceptions === 'object' && !dependency.window.Array.isArray(receivedTrack.exceptions)) {
           receivedTrack.exceptions = [receivedTrack.exceptions];
         }
 
-        receivedTrack.exceptions.forEach(function (exception) {
-          if (deliveredClient.substr(0, exception.location.length) === exception.location) {
-            permission = false;
+        receivedTrack.exceptions.forEach(function (receivedException) {
+          if (deliveredClient.substr(0, receivedException.location.length) === receivedException.location) {
+            estimatedPermission = false;
           }
         });
 
-        if (permission === true) {
+        if (estimatedPermission === true) {
           dependency.window.localStorage.setItem(estimatedSettings.prefix + dependency.window.location.pathname, 'true');
         }
       }
@@ -68,9 +68,9 @@ jstiller.modules.alreadySeen = (function (dependency) {
       });
     }
 
-    deliveredLinks.forEach(function (link) {
-      if (link.host == dependency.window.location.host && dependency.window.localStorage.getItem(estimatedSettings.prefix + link.pathname)) {
-        link.dataset[estimatedSettings.data] = true;
+    deliveredLinks.forEach(function (receivedLink) {
+      if (receivedLink.host == dependency.window.location.host && dependency.window.localStorage.getItem(estimatedSettings.prefix + receivedLink.pathname)) {
+        receivedLink.dataset[estimatedSettings.data] = true;
       }
     });
 
