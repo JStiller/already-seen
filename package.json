@@ -2,7 +2,7 @@
   "name": "@jstiller/already-seen",
   "version": "0.0.1",
   "description": "A simple url tracker",
-  "main": "base.js",
+  "main": "already-seen.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
